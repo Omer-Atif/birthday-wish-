@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Birthday Surprise! (Custom Windows XP Style)</title>
+  
+  <!-- Minecraft Font via CDN -->
+  <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* Windows XP Off-White/Light Pink Palette variables */
+      --xp-pink-dark: #f09bb0;      
+      --xp-pink-light: #fbcad5;     
+      --xp-pink-soft: #fff0f3;      
+      --xp-bg-white: #fdfbf7;        
+      --xp-window-bg: #f4ecea;      
+      --xp-window-border: #f09bb0;
+      --xp-window-text: #3d262b;
+      --minecraft-font: 'Minecraftia', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--minecraft-font);
+      /* Custom background texture blend using an off-white base and light pink gradient overlay */
+      background:#000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Video Ambient Background Layer */
+    .video-bg-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 1; 
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .video-bg-container img,
+    .video-bg-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Windows XP Container Box */
+    .xp-window {
+      width: 92%;
+      max-width: 950px;
+      height: 85%;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 4px solid var(--xp-window-border);
+      border-radius: 8px 8px 0 0;
+      box-shadow: 6px 6px 20px rgba(61, 38, 43, 0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* XP Title Bar Pink Theme */
+    .xp-title-bar {
+      background: linear-gradient(to bottom, var(--xp-pink-light) 0%, var(--xp-pink-dark) 100%);
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      cursor: grab;
+      user-select: none;
+      border-bottom: 2px solid var(--xp-pink-dark);
+    }
+
+    .xp-title-bar-text {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .xp-title-bar-icon {
+      width: 18px;
+      height: 18px;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMElEQVQ4T2NkYGD4z0AAMBEMgC5ACowmEwAsEwwAs0wwAsICzAJm4H8SjOAMGBgY/gMA8gIeM6G8vLIAAAAASUVORK5CYII=');
+      background-size: contain;
+    }
+
+    .xp-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .xp-btn {
+      width: 22px;
+      height: 22px;
+      background-color: #f7e6e9;
+      border: 1px solid #c7b2b6;
+      color: var(--xp-window-text);
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 11px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: inset -1px -1px 0px #887477, inset 1px 1px 0px #fff;
+    }
+
+    .xp-btn:hover { background-color: #fff; }
+    .xp-btn:active { box-shadow: inset 1px 1px 0px #887477, inset -1px -1px 0px #fff; }
+    
+    .xp-close-btn { 
+      background-color: #e96b85; 
+      color: white; 
+      border-color: #b5475d;
+      box-shadow: inset -1px -1px 0px #701c2c, inset 1px 1px 0px #ffb3c1;
+    }
+    .xp-close-btn:hover { background-color: #f08299; }
+
+    /* Main Window Inner Body Frame */
+    .xp-content {
+      flex: 1;
+      background: rgba(255,255,255,.08);
+      padding: 24px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    h1, h2, p {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--xp-window-text);
+    }
+
+    h1 { font-size: 26px; letter-spacing: -1px; }
+    h2 { font-size: 18px; color: #b5475d; }
+    p { font-size: 12px; line-height: 1.8; color: #614a4e; }
+
+    /* Buttons */
+    .classic-btn {
+      display: block;
+      margin: 24px auto;
+      padding: 12px 24px;
+      background-color: #fcf4f5;
+      border: 2px solid #dcaab4;
+      color: var(--xp-window-text);
+      font-family: var(--minecraft-font);
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: inset -1px -1px 0px #a47680, inset 1px 1px 0px #fff;
+      text-decoration: none;
+      text-align: center;
+      width: fit-content;
+    }
+
+    .classic-btn:hover { background-color: #fff; border-color: var(--xp-pink-dark); }
+    .classic-btn:active { box-shadow: inset 1px 1px 0px #a47680, inset -1px -1px 0px #fff; }
+
+    /* Navigation Page Blocks */
+    .page { display: none; }
+    .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+
+    /* Media/Asset Frame Properties */
+    .cake-image {
+      width: 140px;
+      height: 140px;
+      display: block;
+      margin: 0 auto 24px auto;
+      image-rendering: pixelated;
+    }
+
+    .video-showcase-container {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 4/3;
+      margin: 15px auto;
+      border: 3px dashed var(--xp-pink-dark);
+      padding: 4px;
+      background: #fff;
+    }
+
+    .video-showcase-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Ambient Video Track -->
+  <div class="video-bg-container">
+    <img src="13eb9c68c62740a2e3694fbd3041b991.jpg" alt="Background">
+  </div>
+
+  <!-- Draggable XP Window Container -->
+  <div class="xp-window" id="birthdayWindow">
+    
+    <!-- Title Bar Frame Component -->
+    <div class="xp-title-bar" id="titleBar">
+      <div class="xp-title-bar-text">
+        <div class="xp-title-bar-icon"></div>
+        <span>Surprise_Package.exe - Customized Edition</span>
+      </div>
+      <div class="xp-controls">
+        <button class="xp-btn">_</button>
+        <button class="xp-btn">□</button>
+        <button class="xp-btn xp-close-btn" onclick="closeWindow()">X</button>
+      </div>
+    </div>
+
+    <!-- Window Internal Content Area -->
+    <div class="xp-content">
+      
+      <!-- PAGE 1: THE INVITATION -->
+      <div class="page active" id="page1">
+        <h1>Welcome To the System</h1>
+        <h2>A special gift package has arrived...</h2>
+        <p>Your interactive custom environment has compiled successfully inside this window.</p>
+        
+        <!-- Cake Asset URL Placeholder -->
+        <img src="Cake_with_Candle_JE1.webp" alt="Minecraft Custom Cake" class="cake-image"/>
+        
+        <button class="classic-btn" onclick="nextPage(2)">Execute Unboxing.exe</button>
+      </div>
+
+      <!-- PAGE 2: MEDIA SHOWCASE EXHIBIT -->
+      <div class="page" id="page2">
+        <h1>Memory Stream</h1>
+        <h2>Playing Embedded Video File...</h2>
+        
+        <!-- Video Showcase Exhibit Frame -->
+        <div class="video-showcase-container">
+          <video autoplay muted loop playsinline src="2137a8238ffa3ccde7bdaf5515ed29dc.mp4"></video>
+        </div>
+        
+        <p>Reviewing special timeline chapters saved inside the local matrix storage.</p>
+        <button class="classic-btn" onclick="nextPage(3)">Proceed to Room Finale</button>
+      </div>
+
+      <!-- PAGE 3: THE CELEBRATION ROOM -->
+      <div class="page" id="page3">
+        <h1>System Message!</h1>
+        
+        <!-- Second Cake Asset URL Placeholder -->
+        <img src="Cake_with_Candle_JE1.webp" alt="Minecraft Custom Cake" class="cake-image" style="width: 100px; height: 100px;"/>
+        
+        <h2 style="font-size: 24px;">✨ HAPPY BIRTHDAY! ✨</h2>
+        <p>May your upcoming loop cycle compile error-free, unlock legendary levels of inspiration, and bring incredible new blueprints to life!</p>
+        
+        <button class="classic-btn" onclick="nextPage(1)">Reboot Surprise Sequence</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Control Scripts -->
+  <script>
+    // --- Window Dragging Logic ---
+    const windowDiv = document.getElementById('birthdayWindow');
+    const titleBar = document.getElementById('titleBar');
+
+    let isDragging = false;
+    let offset = { x: 0, y: 0 };
+
+    titleBar.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offset.x = windowDiv.offsetLeft - e.clientX;
+      offset.y = windowDiv.offsetTop - e.clientY;
+      titleBar.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        windowDiv.style.left = (e.clientX + offset.x) + 'px';
+        windowDiv.style.top = (e.clientY + offset.y) + 'px';
+        windowDiv.style.position = 'absolute'; 
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      titleBar.style.cursor = 'grab';
+    });
+
+    // --- Page Routing Logic ---
+    function nextPage(pageNumber) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => page.classList.remove('active'));
+
+      const selectedPage = document.getElementById('page' + pageNumber);
+      selectedPage.classList.add('active');
+    }
+
+    // --- Close Window Function ---
+    function closeWindow() {
+      windowDiv.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      windowDiv.style.transform = 'scale(0.8)';
+      windowDiv.style.opacity = '0';
+      setTimeout(() => {
+        windowDiv.style.display = 'none';
+        alert('Surprise execution suspended! Re-load the browser window to start over.');
+      }, 300);
+    }
+  </script>
+</body>
+</html>
